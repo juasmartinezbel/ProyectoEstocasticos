@@ -5,8 +5,9 @@ Rails.application.routes.draw do
   post '/a', to: "welcomes#clear" 
   get '/a', to: "welcomes#clear"
 
+  post '/c', to: "welcomes#find_choice" 
+  get '/c', to: "welcomes#find_choice"
 
   post '/', to: 'welcomes#add'
-  
 
 end

@@ -25,15 +25,13 @@
 
       Add Parent: <%= f.select(:parent, @IdsMap) %>   |
 
-      Was My Choice: <%= f.select(:choice, {"True"=>"True","False"=>"False"})%>  |
-
-      Probability To Here <%= f.text_field :probability, :size => "5" %> </br>
+      Probability To Here <%= f.text_field :probability, :size => "5" %>  |
 
       Gain: <%= f.text_field :gain %></br>
 
-
     <%else%>
       Add Question: <%= f.text_field :text %>
+      
     <%end%>
 
     <!--Botón para añadir el nodo que sigue la instrucción del controlador-->
@@ -49,3 +47,4 @@
   <div id="error"></div>
 
 
+<%= button_to "Find Choice", action: "find_choice"%>
