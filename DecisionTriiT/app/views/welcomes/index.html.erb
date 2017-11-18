@@ -1,22 +1,26 @@
 <h1>Decision TriiT</h1>
+<!--Botón para borrar todos los datos ya puestos-->
 <%= button_to "Clear", action: "clear"%>
 </br>
 
-
-<div>
+<!--Lista donde me aparecerán los "nodos"-->
+<div id="my_list">
   <ul id="list-box">
   </ul>
 </div>
 
+
+<!--Formulario donde insertaré las cosas
+    Diseñado para que se  actualice automaticamente-->
 <div id="my_form">
 
-
+  <!--Comienza a crear el formulario de :hash-->
   <%= form_for :hash, remote: true, html: {id: "array-form", :"data-type" => "json"} do |f| %>
 
-
+    <!--Me imprime la variable @m, que será el id del proximo puesto-->
     <div id="new_id">Id: <%=@m%></div>
 
-
+    <!--Si no se han creado nodos, inicia con una duda básica-->
     <%unless @m==0%>
       Add Scenario: <%= f.text_field :text %>    |
       Add Parent: <%= f.select(:parent, @IdsMap) %>   |
@@ -30,6 +34,7 @@
       Add Question: <%= f.text_field :text %>
     <%end%>
 
+    <!--Botón para añadir el nodo que sigue la instrucción del controlador-->
     <%= button_to "Add", action: "add"%>
     
   <% end %>
