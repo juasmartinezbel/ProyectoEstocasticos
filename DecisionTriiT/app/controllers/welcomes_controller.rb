@@ -7,16 +7,19 @@ class WelcomesController < ApplicationController
     Questions.clear
     #Ids.clear
     @ids=Ids
+    @idsMap=Ids.map{|value| [ value, value ]}
     @m = Ids.length
     @number=Ids
   end
 
   def add
+    @hash
     @me=params[:hash]['text']
     puts @me
-    render json: {content: @me}
     Ids.push(@me)
     puts Ids
+    @ids=Ids.map{|value| [ value, value ]}
+    render json: {content: @me, size: Ids.length, ids: @ids}    
   end
   # GET /welcomes/1
   # GET /welcomes/1.json
