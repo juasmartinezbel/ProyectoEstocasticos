@@ -1,88 +1,55 @@
 class WelcomesController < ApplicationController
   before_action :set_welcome, only: [:show, :edit, :update, :destroy]
   Questions={}
-  Ids=[0,1,2,3]
+  Ids=[];
+  IdsAv=[];
   def index
-
-    Questions.clear
-    #Ids.clear
-    @ids=Ids
-    @idsMap=Ids.map{|value| [ value, value ]}
+    @IdsMap= IdsAv.map{|value| [ value, value ]}
     @m = Ids.length
     @number=Ids
   end
 
+  def clear
+    Questions.clear
+    Ids.clear
+    @IdsMap=Ids.map{|value| [ value, value ]}
+    @m = Ids.length
+    @number=Ids
+    redirect_to action: "index"
+  end
+
   def add
     @hash
-    @me=params[:hash]['text']
-    puts @me
-    Ids.push(@me)
-    puts Ids
-    @ids=Ids.map{|value| [ value, value ]}
-    render json: {content: @me, size: Ids.length, ids: @ids}    
-  end
-  # GET /welcomes/1
-  # GET /welcomes/1.json
-  def show
-  end
+    @text=params[:hash]['text'].to_s
+    @parent=params[:hash]['parent']
+    @probability=params[:hash]['probability']
+    @choice = params[:hash]['choice']
+    @gain = params[:hash]['gain']
+    @id = (Ids.length).to_i
 
-  # GET /welcomes/new
-  def new
-    @welcome = Welcome.new
-  end
+    Ids.append(Ids.length)
 
-  # GET /welcomes/1/edit
-  def edit
-  end
-
-  # POST /welcomes
-  # POST /welcomes.json
-  def create
-    @welcome = Welcome.new(welcome_params)
-
-    respond_to do |format|
-      if @welcome.save
-        format.html { redirect_to @welcome, notice: 'Welcome was successfully created.' }
-        format.json { render :show, status: :created, location: @welcome }
+    if (Ids.length-1>0)
+      if(@choice.eql? "False")
+        @text = @text + " | "+ @probability.to_s + "% | Parent: " + @parent.to_s
       else
-        format.html { render :new }
-        format.json { render json: @welcome.errors, status: :unprocessable_entity }
+        @text = @text + " | Parent: " + @parent.to_s
       end
-    end
-  end
 
-  # PATCH/PUT /welcomes/1
-  # PATCH/PUT /welcomes/1.json
-  def update
-    respond_to do |format|
-      if @welcome.update(welcome_params)
-        format.html { redirect_to @welcome, notice: 'Welcome was successfully updated.' }
-        format.json { render :show, status: :ok, location: @welcome }
+      unless(@gain.to_s.eql? "")
+         @text = @text + " | Gain: " + @gain.to_s
       else
-        format.html { render :edit }
-        format.json { render json: @welcome.errors, status: :unprocessable_entity }
+         IdsAv.append(Ids.length-1)
       end
+    else
+      IdsAv.append(Ids.length-1)
     end
+
+    render json: {
+        id: @id,
+        content: @text,
+        size: Ids.length
+    }
   end
 
-  # DELETE /welcomes/1
-  # DELETE /welcomes/1.json
-  def destroy
-    @welcome.destroy
-    respond_to do |format|
-      format.html { redirect_to welcomes_url, notice: 'Welcome was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_welcome
-      @welcome = Welcome.find(params[:id])
-    end
-
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def welcome_params
-      params.fetch(:welcome, {})
-    end
 end

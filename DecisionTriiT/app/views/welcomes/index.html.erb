@@ -1,25 +1,43 @@
 <h1>Decision TriiT</h1>
-
+<%= button_to "Clear", action: "clear"%>
+</br>
 <div>
   <ul id="list-box">
-  <%unless @m==0%>
-    <%@number.each do |f|%>
-      <li>
-        <%=f%>
-      </li>
+  </ul>
+</div>
+<a href-"#" id="clear">Delete</a>
+
+
+<div id="my_form">
+
+
+  <%= form_for :hash, remote: true, html: {id: "array-form", :"data-type" => "json"} do |f| %>
+
+
+    <div id="new_id">Id: <%=@m%></div>
+
+
+    <%unless @m==0%>
+      Add Scenario: <%= f.text_field :text %>    |
+      Add Parent: <%= f.select(:parent, @IdsMap) %>   |
+      Was My Choice: <%= f.select(:choice, {"True"=>"True","False"=>"False"})%>  |
+      Probability To Here <%= f.text_field :probability, :size => "5" %> </br>
+
+      Gain: <%= f.text_field :gain %>
+      </br>
+
+    <%else%>
+      Add Question: <%= f.text_field :text %>
     <%end%>
-    </ul>
-  <%end%>
+
+    <%= button_to "Add", action: "add"%>
+    
+  <% end %>
 </div>
 
-<%= form_for :hash, remote: true, html: 
-  {id: "array-form", 
-  :"data-type" => "json"} do |f| %>
-
-  <div id="new_id">Id: <%=@m%></div>
-  Add Question: <%= f.text_field :text %> 
-
-  <div id="to_select"> Add Parent: <%= f.select(:parent, @idsMap)%> </div> </br>
-  <%= button_to "Add", action: "add"%>
-
-<% end %>
+<script type="text/javascript" language="javascript">
+function updateDiv()
+{ 
+    $( "#my_form" ).load(window.location.href + " #my_form" );
+}
+</script>
