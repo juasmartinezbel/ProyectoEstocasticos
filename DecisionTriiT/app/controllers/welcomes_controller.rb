@@ -20,7 +20,8 @@ class WelcomesController < ApplicationController
 
   def add
     @hash
-    @text=params[:hash]['text'].to_s
+    dilema=params[:hash]['text'].to_s
+    @text= dilema
     @parent=params[:hash]['parent']
     @probability=params[:hash]['probability']
     @choice = params[:hash]['choice']
@@ -34,15 +35,23 @@ class WelcomesController < ApplicationController
         @text = @text + " | "+ @probability.to_s + "% | Parent: " + @parent.to_s
       else
         @text = @text + " | Parent: " + @parent.to_s
+        @probability=100
       end
 
       unless(@gain.to_s.eql? "")
          @text = @text + " | Gain: " + @gain.to_s
+         @gain =  @gain.to_f
       else
+         @gain = nil
          IdsAv.append(Ids.length-1)
       end
+      @parent=@parent.to_i
+
+      Questions[@parent.to_i]["sons"].append(@id)
     else
       IdsAv.append(Ids.length-1)
+      @parent=nil
+      @probability=100
     end
 
     render json: {
@@ -50,6 +59,16 @@ class WelcomesController < ApplicationController
         content: @text,
         size: Ids.length
     }
-  end
 
+    newIt=Ids.length-1
+
+    Questions[newIt] = {
+      "dilema"=>dilema,
+      "parent"=>@parent.to_i, 
+      "probability"=>@probability.to_f/100,
+      "gain"=>@gain,
+      "sons"=>[],
+      "E"=>0}
+    puts Questions
+  end
 end
