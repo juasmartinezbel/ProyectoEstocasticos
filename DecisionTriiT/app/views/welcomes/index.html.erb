@@ -1,0 +1,25 @@
+<h1>Decision TriiT</h1>
+
+<div >
+  <ul id="list-box">
+  <%unless @m==0%>
+    <%@number.each do |f|%>
+      <li>
+        <%=f%>
+      </li>
+    <%end%>
+    </ul>
+  <%end%>
+</div>
+
+<%= form_for :hash, remote: true, html: 
+  {id: "array-form", 
+  :"data-type" => "json"} do |f| %>
+  Id: <%=@m%>
+  Add Question: <%= f.text_field :text %> |
+  Add Parent: <td><%= f.select(:parent, @ids.map{ |value| [ value, value ] })%></td> |
+  Add Probability: <!-- f.number_field :probability--> |
+
+
+  <%= button_to "Add", action: "add"%>
+<% end %>
