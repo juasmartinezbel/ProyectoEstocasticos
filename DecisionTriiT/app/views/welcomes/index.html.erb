@@ -13,9 +13,8 @@
 <!--Formulario donde insertaré las cosas
     Diseñado para que se  actualice automaticamente-->
 <div id="my_form">
-
   <!--Comienza a crear el formulario de :hash-->
-  <%= form_for :hash, remote: true, html: {id: "array-form", :"data-type" => "json"} do |f| %>
+  <%= form_for :hash, http: { method: 'add' }, remote: true, html: {id: "array-form", :"data-type" => "json"} do |f| %>
 
     <!--Me imprime la variable @m, que será el id del proximo puesto-->
     <div id="new_id">Id: <%=@m%></div>
@@ -23,12 +22,15 @@
     <!--Si no se han creado nodos, inicia con una duda básica-->
     <%unless @m==0%>
       Add Scenario: <%= f.text_field :text %>    |
+
       Add Parent: <%= f.select(:parent, @IdsMap) %>   |
+
       Was My Choice: <%= f.select(:choice, {"True"=>"True","False"=>"False"})%>  |
+
       Probability To Here <%= f.text_field :probability, :size => "5" %> </br>
 
-      Gain: <%= f.text_field :gain %>
-      </br>
+      Gain: <%= f.text_field :gain %></br>
+
 
     <%else%>
       Add Question: <%= f.text_field :text %>
@@ -37,5 +39,13 @@
     <!--Botón para añadir el nodo que sigue la instrucción del controlador-->
     <%= button_to "Add", action: "add"%>
     
+    
+    
   <% end %>
+
 </div>
+
+  </br>
+  <div id="error"></div>
+
+

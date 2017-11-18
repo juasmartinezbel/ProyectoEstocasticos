@@ -1,4 +1,4 @@
-# Dillinger
+# Decision TriiT
 
 En esta aplicación hay tres archivos principales, además de los básicos como routes y otros:
 

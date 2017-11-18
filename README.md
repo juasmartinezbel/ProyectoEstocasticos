@@ -1,4 +1,4 @@
-# Dillinger
+# Decision TriiT
 
 En esta aplicación hay tres archivos principales, además de los básicos como routes y otros:
 
@@ -8,6 +8,8 @@ Este es el controlador de la aplicación y tiene 3 funciones fundamentales
     def index
     def clear
     def add
+    def check
+    def print_all
 ```
 ## DecisionTriiT/app/views/welcomes/index.html.erb
 
