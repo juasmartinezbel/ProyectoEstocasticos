@@ -103,7 +103,7 @@ class WelcomesController < ApplicationController
          Leaves.push(@id)
          @E=@gain*(@probability.to_f/100)
       else
-         @gain = 0.0
+         @gain = -Float::INFINITY
          IdsAv.append(@id)
          NodesNoLeaves.append(@id)
       end
@@ -125,7 +125,8 @@ class WelcomesController < ApplicationController
       IdsAv.append(@id)
       @parent=-1
       @probability=nil
-      @gain = 0.0
+      @gain = -Float::INFINITY
+      @route=[0]
       NodesNoLeaves.append(@id)
     end
 
@@ -178,6 +179,7 @@ class WelcomesController < ApplicationController
   def find_choice
     #Chequeamos que efectivamente no falte nada
     @result=check
+
     unless (@result.to_s.eql? "Faltan hojas")
       
       #Clonamos el arbol para evitar malos cambios
@@ -185,7 +187,11 @@ class WelcomesController < ApplicationController
 
       #Hacemos el while general
       while true
-
+        puts "\n"
+        puts "\n"
+        puts questions
+        puts "\n"
+        puts "\n"
         #Tomamos el primer elemento de la lista de hojas
         u=Leaves.shift
 
@@ -211,8 +217,11 @@ class WelcomesController < ApplicationController
           end
         else
         #Si es de probabilidad aleatoria, sumamos los E (Prob*Gain) de los hijos
-          questions[parent]['gain']+=e
-          
+          if(questions[parent]['gain']==-Float::INFINITY)
+            questions[parent]['gain']=0
+          end
+
+          questions[parent]['gain']+=e    
           #Asignamos las rutas posibles
           unless(node["route"].empty?)
             questions[parent]["route"]=questions[parent]["route"]+[node["route"]]
@@ -234,7 +243,9 @@ class WelcomesController < ApplicationController
       #Me verifica la ruta
       @ideal_route=questions[0]['route']
       @so=""
-      puts @ideal_route 
+      puts "The Ideal Route"
+      puts @ideal_route.to_s
+
       if @ideal_route[1].kind_of?(Array)
         @so=questions[@ideal_route[1][0]]["dilema"]
       else
