@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ide: 1
+  parent: 1
+  gain: 1.5
+  probability: 1.5
+  expected_Value: 1.5
+  route: MyString
+  children: MyString
+
+two:
+  ide: 1
+  parent: 1
+  gain: 1.5
+  probability: 1.5
+  expected_Value: 1.5
+  route: MyString
+  children: MyString

@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Ide:</strong>
+  <%= @node.ide %>
+</p>
+
+<p>
+  <strong>Parent:</strong>
+  <%= @node.parent %>
+</p>
+
+<p>
+  <strong>Gain:</strong>
+  <%= @node.gain %>
+</p>
+
+<p>
+  <strong>Probability:</strong>
+  <%= @node.probability %>
+</p>
+
+<p>
+  <strong>Expected value:</strong>
+  <%= @node.expected_Value %>
+</p>
+
+<p>
+  <strong>Route:</strong>
+  <%= @node.route %>
+</p>
+
+<p>
+  <strong>Children:</strong>
+  <%= @node.children %>
+</p>
+
+<%= link_to 'Edit', edit_node_path(@node) %> |
+<%= link_to 'Back', nodes_path %>
