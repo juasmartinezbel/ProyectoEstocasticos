@@ -19,6 +19,11 @@ class NodesController < ApplicationController
 
   end
 
+  def get_size
+    @size=Node.all.size
+    render json: {:size=>@size}
+  end
+
   def clear
     
     Node.delete_all
