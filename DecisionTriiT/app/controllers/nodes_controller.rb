@@ -5,8 +5,8 @@ class NodesController < ApplicationController
   # GET /nodes
   # GET /nodes.json
   def index
-    size=Node.all.size
-    if size>0
+    @size=Node.all.size
+    if @size>0
       tree=Node.generate_tree
       puts tree
       puts "\n\n\n\n"
@@ -57,25 +57,35 @@ class NodesController < ApplicationController
   # POST /nodes.json
 
 def create
-    dilema=params[:name].to_s
+    dilema=params[:node][:name].to_s
     @text= dilema
-    @parent_id=params[:parent]
-    @probability=params[:probability]
-    @gain = params[:gain]
+    @parent_id=params[:node][:parent]
+    @parent_id=@parent_id.to_i
+    @probability=params[:node][:probability]
+    
+    unless(@probability.to_s.eql? '')
+      @probability=@probability.to_f
+    else
+       @probability=nil
+    end
+    @gain = params[:node][:gain]
+    unless(@gain.to_s.eql? '')
+      @gain=@gain.to_f
+    else
+       @gain=nil
+    end
     @id = Node.all.size
     @E=nil
     @route = ""
     valid=true
 
     if (@id>0)  
-
       #Me comprueba que el nodo sí sea el que debe ser
-      parent=Node.find_by(:ide=>@parent_id)
-
+      parent=Node.find_by(:ide=>@parent_id.to_i)
+      
       if parent.gain>-Float::INFINITY
         valid=false    
       end
-
 
       #En caso de ser el nodo origen, verificamos que
       #La opción sea una probabilidad aleatoria (El dolar sube, puedo perder, puedo ganar)
@@ -122,7 +132,8 @@ def create
 
     
     respond_to do |format|
-      if (valid)
+
+      if (!valid)
         format.html { render :new }   
         format.json { render json: {:Error=>"This node can't have children"}, status: :unprocessable_entity}
       else

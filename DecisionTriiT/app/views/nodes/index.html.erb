@@ -3,29 +3,36 @@
 <h1>Nodes</h1>
 
 <table>
-  <thead>
-    <tr>
-      <th>Ide</th>
-      <th>Parent</th>
-      <th>Gain</th>
-      <th>Probability</th>
-      <th>Expected value</th>
-      <th>Route</th>
-      <th>Children</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
 
   <tbody>
     <% @nodes.each do |node| %>
+      
       <tr>
-        <td><%= node.ide %></td>
-        <td><%= node.parent %></td>
-        <td><%= node.gain %></td>
-        <td><%= node.probability %></td>
-        <td><%= node.expected_Value %></td>
-        <td><%= node.route.split(',').map { |s| s.to_i } %></td>
-        <td><%= node.children.split(',').map { |s| s.to_i } %></td>
+        <td>Id: <%= node.ide %></td>
+        <%if (node.ide!=0)%>
+          <td>Padre: <%= node.parent %></td>
+        <%else%>
+          <td></td>
+        <%end%>
+
+        <%if (node.gain != -Float::INFINITY)%>
+          <td>Ganancia: <%= node.gain%></td>
+        <%else%>
+          <td></td>
+        <%end%>
+
+        <%if (node.probability != 100.to_f) %>
+          <%if (node.ide != 0) %>
+            <td>Probabilidad: <%=node.probability%>%</td>
+          <%else%>
+            <td></td>
+          <%end%>
+        <%else%>
+          <td></td>
+        <%end%>
+        
+        <td>Hijos: <%= node.children.split(',').map { |s| s.to_i } %></td>
+        <td><b><%= node.name %></b></td>
         <td><%= link_to 'Edit', edit_node_path(node) %></td>
         <td><%= link_to 'Destroy', node, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
