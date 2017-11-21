@@ -1,9 +1,9 @@
 class Node < ApplicationRecord
 	def self.is_complete
-		g=has_all_leaves
-		u=has_all_probabilities
+		g=self.has_all_leaves
+		u=self.has_all_probabilities
 		h=u&&g
-		g
+		h
 	end
 
 	def self.has_all_leaves
@@ -16,7 +16,7 @@ class Node < ApplicationRecord
 		end
 		u
 	end
-	
+
 	def self.has_all_probabilities
 		u=true
 		g=Node.where("nodes.full_prob != ?", 100.0);

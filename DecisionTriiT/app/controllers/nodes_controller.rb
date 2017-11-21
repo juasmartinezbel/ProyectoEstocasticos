@@ -30,7 +30,7 @@ class NodesController < ApplicationController
     render json: {:Success=>"All nodes have been deleted"}
   end
 
-  def check_if_null(par, prob)
+  def check_if_null(par)
     nu=par
     if (par.to_s.eql? "null")
       nu=nil
@@ -39,17 +39,24 @@ class NodesController < ApplicationController
   end
 
   def set_prob(parent, probability)
-    if(probability=100.to_f)
-      if (parent.probability=!100||parent.probability=!0)
+    puts "LA REPUTISIMA MADRE"
+    puts "LA REPUTISIMA MADRE"
+    puts "LA REPUTISIMA MADRE"
+    puts "LA REPUTISIMA MADRE"
+    puts "LA REPUTISIMA MADRE"
+    puts "LA REPUTISIMA MADRE"
+    if(probability==100)
+      puts probability
+      if (parent.full_prob!=100.to_f&&parent.full_prob!=0.to_f)
         return false
       end
-      parent.probability=100
+      parent.full_prob=100
     else
-      prob=parent.probability+probability
+      prob=parent.full_prob + probability
       if(prob>100)
         return false
       else
-        parent.probability+=probability
+        parent.full_prob+=probability
       end
     end
 
@@ -87,13 +94,17 @@ class NodesController < ApplicationController
       #O es una opción de la que yo puedo escoger (Tomo la prueba 1, prueba 2, etc.)  
       unless(@probability.to_s.eql? "")
         @probability=@probability.to_f
-        g=set_prob(@probability,parent)
+        g=set_prob(parent, @probability)
         unless(g)
-          render json: {:Error=>"This node can't that children"}, status: :unprocessable_entity and return
+          render json: {:Error=>"This node can't have that children"}, status: :unprocessable_entity and return
         end
       else
         @text = @text + " | Parent: " + @parent_id.to_s
         @probability=100
+        g=set_prob(parent, @probability)
+        unless(g)
+          render json: {:Error=>"This node can't have that children"}, status: :unprocessable_entity and return
+        end
         @route=@id.to_s
       end
 
@@ -279,13 +290,15 @@ class NodesController < ApplicationController
       @so=""
       puts "The Ideal Route"
       puts @ideal_route.to_s
-
-      if @ideal_route[1].kind_of?(Array)
-        @so=questions[@ideal_route[1][0]]["name"]
+      if(@ideal_route.length!=1)
+        if @ideal_route[1].kind_of?(Array)
+          @so=questions[@ideal_route[1][0]]["name"]
+        else
+          @so=questions[@ideal_route[1]]["name"]
+        end
       else
-        @so=questions[@ideal_route[1]]["name"]
+        @so = "La opción es aleatoria, así que no depende del usuario"
       end
-
       @dilema=questions[0]["name"]
       @ideal_route=@ideal_route.to_s
       @ideal_gain=questions[0]["gain"].to_s
