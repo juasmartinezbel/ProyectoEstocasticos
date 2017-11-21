@@ -10,16 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171120003956) do
+ActiveRecord::Schema.define(version: 20171121144310) do
 
-  create_table "nodes", force: :cascade do |t|
+  create_table "decisions", force: :cascade do |t|
     t.string "question"
-    t.decimal "probability", default: "0.0"
-    t.decimal "gain", default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_decisions_on_user_id"
+  end
+
+  create_table "nodes", force: :cascade do |t|
+    t.string "info"
+    t.decimal "probability", default: "0.0"
+    t.decimal "gain", default: "0.0"
     t.string "ancestry"
+    t.integer "decision_id"
     t.index ["ancestry"], name: "index_nodes_on_ancestry"
+    t.index ["decision_id"], name: "index_nodes_on_decision_id"
   end
 
   create_table "users", force: :cascade do |t|

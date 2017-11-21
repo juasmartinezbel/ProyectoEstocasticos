@@ -25,6 +25,7 @@ class WelcomesController < ApplicationController
   def index
     @IdsMap= IdsAv.map{|value| [ value, value ]}
     @m = Ids.length
+    @decisions = current_user.decisions
   end
 
 

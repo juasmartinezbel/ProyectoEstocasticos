@@ -2,6 +2,12 @@
 <!--Botón para borrar todos los datos ya puestos-->
 <%= button_to "Clear", action: "clear"%>
 </br>
+<% unless @decisions.nil? %>
+  <% @decisions.each do |dec| %>
+    <p><%= Decision.convert_decision_into_hash(dec.id)%></p>
+  <% end %>
+<% end %>
+
 
 <!--Lista donde me aparecerán los "nodos"-->
 <div id="my_list">
