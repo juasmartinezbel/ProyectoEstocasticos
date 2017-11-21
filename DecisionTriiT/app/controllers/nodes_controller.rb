@@ -4,14 +4,25 @@ class NodesController < ApplicationController
 
   # GET /nodes
   def index
-    
-    tree=Node.generate_tree
-    puts tree
-    puts "\n\n\n\n"
-    puts Node.is_complete
-    @tree_node=Node.json_tree(tree).to_json
-    render json: @tree_node
+    size=Node.all.size
 
+    if size>0
+      tree=Node.generate_tree
+      puts tree
+      puts "\n\n\n\n"
+      puts Node.is_complete
+      @tree_node=Node.json_tree(tree).to_json
+      render json: @tree_node
+    else
+      render json: {:message=>"There is no nodes"}
+    end
+
+  end
+
+  def clear
+    
+    Node.delete_all
+    render json: {:Success=>"All nodes have been deleted"}
   end
 
   # POST /nodes

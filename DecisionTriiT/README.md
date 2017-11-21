@@ -12,18 +12,28 @@ Me crea un nuevo nodo que debe tener el formato
 ```json
 {
 	"name": "string",
-	"parent": integer,
-	"gain": number,
-	"probability": number
+	"parent": "integer",
+	"gain": "number",
+	"probability": "number"
 }
 ```
+Ejemplo
+```json
+{
+	"name": "Hay Leche",
+	"parent": 1,
+	"gain": 12,
+	"probability": 40.5
+}
+```
+
 Si probability es null, entonces es opción arbitraria.
 Si tiene gain, se considera fin de rama, y dicha rama NO DEBERÁ tener hijos
 
 ### EL NODO INICIAL DEBERÁ TENER EL FORMATO
 ```json
 {
-	"name": "string"
+	"name": "string",
 	"parent": null,
 	"gain": null,
 	"probability": null
@@ -38,9 +48,9 @@ Me actualiza el nodo que necesito, los valores que acepta cambios son:
 ```json
 {
 	"name": "string",
-	"parent": integer,
-	"gain": number,
-	"probability": number
+	"parent": "integer",
+	"gain": "number",
+	"probability": "number"
 }
 ```
 
@@ -56,3 +66,6 @@ Retornandome:
     "Gain": "-23.6"			//El beneficio
 }
 ```
+
+## GET /clear
+Me borra todo el arbol.
