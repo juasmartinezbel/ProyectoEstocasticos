@@ -1,5 +1,12 @@
 class Node < ApplicationRecord
 	def self.is_complete
+		g=has_all_leaves
+		u=has_all_probabilities
+		h=u&&g
+		g
+	end
+
+	def self.has_all_leaves
 		u=true
 		g=Node.where("nodes.children = ? AND nodes.expected_value is ?", "", nil);
 		if g.length>0
@@ -9,7 +16,17 @@ class Node < ApplicationRecord
 		end
 		u
 	end
-
+	
+	def self.has_all_probabilities
+		u=true
+		g=Node.where("nodes.full_prob != ?", 100.0);
+		if g.length>0
+			u=false
+		else
+			u=true
+		end
+		u
+	end
 	def self.get_leaves
 		Node.where("nodes.expected_value is not null").pluck(:ide)
 	end

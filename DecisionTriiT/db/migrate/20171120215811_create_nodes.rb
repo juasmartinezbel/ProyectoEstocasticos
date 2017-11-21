@@ -9,7 +9,7 @@ class CreateNodes < ActiveRecord::Migration[5.1]
       t.float :expected_value
       t.string :route
       t.string :children
-
+      t.float :full_prob
       t.timestamps
     end
   end

@@ -29,12 +29,32 @@ class NodesController < ApplicationController
     Node.delete_all
     render json: {:Success=>"All nodes have been deleted"}
   end
-  def check_if_null(par)
+
+  def check_if_null(par, prob)
     nu=par
     if (par.to_s.eql? "null")
       nu=nil
     end
     nu
+  end
+
+  def set_prob(parent, probability)
+    if(probability=100.to_f)
+      if (parent.probability=!100||parent.probability=!0)
+        return false
+      end
+      parent.probability=100
+    else
+      prob=parent.probability+probability
+      if(prob>100)
+        return false
+      else
+        parent.probability+=probability
+      end
+    end
+
+    parent.save
+    return true
   end
 
   # POST /nodes
@@ -50,7 +70,7 @@ class NodesController < ApplicationController
     @id = Node.all.size
     @E=nil
     @route = ""
-
+    is_leaf=false
 
     if (@id>0)  
 
@@ -66,8 +86,11 @@ class NodesController < ApplicationController
       #La opción sea una probabilidad aleatoria (El dolar sube, puedo perder, puedo ganar)
       #O es una opción de la que yo puedo escoger (Tomo la prueba 1, prueba 2, etc.)  
       unless(@probability.to_s.eql? "")
-        
-        @text = @text + " | "+ @probability.to_s + "% | Parent: " + @parent_id.to_s
+        @probability=@probability.to_f
+        g=set_prob(@probability,parent)
+        unless(g)
+          render json: {:Error=>"This node can't that children"}, status: :unprocessable_entity and return
+        end
       else
         @text = @text + " | Parent: " + @parent_id.to_s
         @probability=100
@@ -80,6 +103,8 @@ class NodesController < ApplicationController
          @text = @text + " | Gain: " + @gain.to_s
          @gain =  @gain.to_f
          @E=@gain*(@probability.to_f/100)
+         is_leaf=true
+
       else
          @gain = -Float::INFINITY
       end
@@ -102,6 +127,11 @@ class NodesController < ApplicationController
     @node.parent=@parent_id
     @node.probability=@probability
     @node.children=""
+    unless(is_leaf)
+      @node.full_prob= 0.0
+    else
+      @node.full_prob= 100.0
+    end
     @node.expected_value=@E
     @node.gain=@gain 
     @node.route=@route
@@ -116,9 +146,7 @@ class NodesController < ApplicationController
       puts "\n\n\n\n"
       puts Node.is_complete
       @tree_node=Node.json_tree(tree).to_json
-
       render json: @tree_node, status: :created
-
     else
       render json: @node.errors, status: :unprocessable_entity
     end
