@@ -56,12 +56,13 @@ class Node < ApplicationRecord
 		my_node=tree[node]
 		u=[]
 
-
+		puts my_node
 		for i in my_node["children"]
 			u.append(turn_tree(tree, i.to_i))
 		end
 
 		my_tree = {
+			  "id"=>node,
 			  "name"=>my_node["name"].to_s,
 			  "parent"=>my_node["parent"].to_s,
 			  "probability"=>my_node["probability"].to_s,
@@ -71,5 +72,13 @@ class Node < ApplicationRecord
 			  "children"=>u
 		}
 		my_tree
+	end
+
+	def self.turn(ar)
+		txt=''
+		for i in ar
+			txt=i.to_s+','
+		end
+		txt
 	end
 end

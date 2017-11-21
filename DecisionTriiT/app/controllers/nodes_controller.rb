@@ -1,17 +1,17 @@
 class NodesController < ApplicationController
-  before_action :set_node, only: [:show, :update, :destroy]
+  before_action :set_node, only: [:update, :destroy]
   require 'json'
 
   # GET /nodes
   def index
-    @nodes = Node.all
+    
+    tree=Node.generate_tree
+    puts tree
+    puts "\n\n\n\n"
+    puts Node.is_complete
+    @tree_node=Node.json_tree(tree).to_json
+    render json: @tree_node
 
-    render json: @nodes
-  end
-
-  # GET /nodes/1
-  def show
-    render json: @node
   end
 
   # POST /nodes
@@ -23,11 +23,18 @@ class NodesController < ApplicationController
     @gain = params[:gain]
     @id = Node.all.size
     @E=nil
-    @route = []
+    @route = ""
+
 
     if (@id>0)  
-      puts @id
+
+      #Me comprueba que el nodo sí sea el que debe ser
       parent=Node.find_by(:ide=>@parent_id)
+
+      if parent.gain>-Float::INFINITY
+        render json: {:Error=>"This node can't have children"}, status: :unprocessable_entity and return
+      end
+
 
       #En caso de ser el nodo origen, verificamos que
       #La opción sea una probabilidad aleatoria (El dolar sube, puedo perder, puedo ganar)
@@ -62,7 +69,6 @@ class NodesController < ApplicationController
       @route=0
     end
 
-
     @node=Node.new
     @node.ide=@id
     @node.name=dilema
@@ -89,16 +95,35 @@ class NodesController < ApplicationController
     else
       render json: @node.errors, status: :unprocessable_entity
     end
+
   end
 
-  def show_tree
-    @origin = Node.find_by(:ide=>0, :children => nil)
-  end
 
   # PATCH/PUT /nodes/1
   def update
+    if(params[:parent]!=@node.parent)
+      @parent=Node.find_by(:ide=>@node.parent)
+      arr=@parent.children.split(',').map { |s| s.to_i }
+      arr.delete(@node.ide)
+      ar=Node.turn(arr)
+      @parent.children=ar
+      @parent.save
+
+      @new_parent=Node.find_by(:ide=>params[:parent])
+      @new_parent.children+=@node.ide.to_s
+      @new_parent.save
+    end
+
     if @node.update(node_params)
-      render json: @node
+      
+
+      tree=Node.generate_tree
+      puts tree
+      puts "\n\n\n\n"
+      puts Node.is_complete
+      @tree_node=Node.json_tree(tree).to_json
+
+      render json: @tree_node
     else
       render json: @node.errors, status: :unprocessable_entity
     end
@@ -106,14 +131,34 @@ class NodesController < ApplicationController
 
   # DELETE /nodes/1
   def destroy
+    @parent=Node.find_by(:ide=>@node.parent)
+    arr=@parent.children.split(',').map { |s| s.to_i }
+    
+    arr.delete(@node.ide)
+    ar=Node.turn(arr)
+    @parent.children=ar
+    @parent.save
     @node.destroy
+    
+
+
+    tree=Node.generate_tree
+    puts tree
+    puts "\n\n\n\n"
+    puts Node.is_complete
+    @tree_node=Node.json_tree(tree).to_json
+    render json: @tree_node
+
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_node
-      @node = Node.find(params[:id])
+      @node = Node.find_by(:ide=>params[:id])
     end
 
+    def node_params
+      params.require(:node).permit(:name, :parent, :gain, :probability)
+    end
 
 end

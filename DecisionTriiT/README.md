@@ -1,24 +1,45 @@
-# README
+# DecisionTriiT
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+##Routes
 
-Things you may want to cover:
+###GET /nodes
 
-* Ruby version
+Me renderiza el arbol a como está ahora
 
-* System dependencies
 
-* Configuration
+###POST /nodes
+Me crea un nuevo nodo que debe tener el formato
+```json
+{
+	"name": "string",
+	"parent": integer,
+	"gain": number,
+	"probability": number
+}
+```
+Si probability es null, entonces es opción arbitraria.
+Si tiene gain, se considera fin de rama, y dicha rama NO DEBERÁ tener hijos
 
-* Database creation
+####EL NODO INICIAL DEBERÁ TENER EL FORMATO
+```json
+{
+	"name": "string"
+	"parent": null,
+	"gain": null,
+	"probability": null
+}
+```
 
-* Database initialization
+###DELETE /nodes/:id
+Me borra el nodo de la id indicada.
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+###PUT /nodes/:id
+Me actualiza el nodo que necesito, los valores que acepta cambios son:
+```json
+{
+	"name": "string",
+	"parent": integer,
+	"gain": number,
+	"probability": number
+}
+```
