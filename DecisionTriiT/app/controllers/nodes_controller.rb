@@ -1,5 +1,6 @@
 class NodesController < ApplicationController
   before_action :set_node, only: [:show, :update, :destroy]
+  require 'json'
 
   # GET /nodes
   def index
@@ -58,7 +59,7 @@ class NodesController < ApplicationController
       @parent_id=-1
       @probability=nil
       @gain = -Float::INFINITY
-      @route=[0]
+      @route=0
     end
 
 
@@ -77,10 +78,14 @@ class NodesController < ApplicationController
     
 
     if @node.save
-      Node.generate_tree
+      tree=Node.generate_tree
+      puts tree
       puts "\n\n\n\n"
       puts Node.is_complete
-      render json: @node, status: :created, location: @node
+      @tree_node=Node.json_tree(tree).to_json
+
+      render json: @tree_node, status: :created
+
     else
       render json: @node.errors, status: :unprocessable_entity
     end
