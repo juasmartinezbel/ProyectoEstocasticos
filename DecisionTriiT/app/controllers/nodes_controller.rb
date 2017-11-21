@@ -29,14 +29,24 @@ class NodesController < ApplicationController
     Node.delete_all
     render json: {:Success=>"All nodes have been deleted"}
   end
+  def check_if_null(par)
+    nu=par
+    if (par.to_s.eql? "null")
+      nu=nil
+    end
+    nu
+  end
 
   # POST /nodes
   def create
     dilema=params[:name].to_s
     @text= dilema
     @parent_id=params[:parent]
+    check_if_null(@parent_id)
     @probability=params[:probability]
+    check_if_null(@probability)
     @gain = params[:gain]
+    check_if_null(@gain)
     @id = Node.all.size
     @E=nil
     @route = ""
@@ -56,6 +66,7 @@ class NodesController < ApplicationController
       #La opción sea una probabilidad aleatoria (El dolar sube, puedo perder, puedo ganar)
       #O es una opción de la que yo puedo escoger (Tomo la prueba 1, prueba 2, etc.)  
       unless(@probability.to_s.eql? "")
+        
         @text = @text + " | "+ @probability.to_s + "% | Parent: " + @parent_id.to_s
       else
         @text = @text + " | Parent: " + @parent_id.to_s
@@ -117,7 +128,7 @@ class NodesController < ApplicationController
 
   # PATCH/PUT /nodes/1
   def update
-    if(params[:parent]!=@node.parent)
+    if(params[:parent]!=@node.parent && @node.ide!=0)
       @parent=Node.find_by(:ide=>@node.parent)
       arr=@parent.children.split(',').map { |s| s.to_i }
       arr.delete(@node.ide)
@@ -131,8 +142,6 @@ class NodesController < ApplicationController
     end
 
     if @node.update(node_params)
-      
-
       tree=Node.generate_tree
       puts tree
       puts "\n\n\n\n"
@@ -147,6 +156,11 @@ class NodesController < ApplicationController
 
   # DELETE /nodes/1
   def destroy
+
+    if(@node.ide==0||@node.children !="")
+      render json: {:Error=>"This node can't be deleted"}, status: :unprocessable_entity and return
+    end
+
     @parent=Node.find_by(:ide=>@node.parent)
     arr=@parent.children.split(',').map { |s| s.to_i }
     
@@ -278,6 +292,9 @@ class NodesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_node
       @node = Node.find_by(:ide=>params[:id])
+      if(@node.nil?)
+        render json: {:Error=>"This node doesn't exist. You sure you put the id of the Node and not the one from the database?"}, status: :unprocessable_entity and return
+      end
     end
 
     def node_params

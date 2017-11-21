@@ -47,7 +47,18 @@ Si tiene gain, se considera fin de rama, y dicha rama NO DEBERÁ tener hijos
 
 ## DELETE /nodes/:id
 Me borra el nodo de la id indicada.
-
+Si el nodo no es una hoja, saldrá el mensaje de error:
+```json
+{
+    "Error": "This node can't be deleted"
+}
+```
+Si el nodo no existe, saldrá el mensaje de error:
+```json
+{
+    "Error": "This node doesn't exist. You sure you put the id of the Node and not the one from the database?"
+}
+```
 ## PUT /nodes/:id
 Me actualiza el nodo que necesito, los valores que acepta cambios son:
 ```json
