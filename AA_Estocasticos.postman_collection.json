@@ -1,0 +1,104 @@
+{
+	"variables": [],
+	"info": {
+		"name": "AA_Estocasticos",
+		"_postman_id": "d5084499-9b4a-0245-24e3-8e15845d9300",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Obtener nodos",
+			"request": {
+				"url": "localhost:3000/nodes",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Raíz",
+			"request": {
+				"url": "localhost:3000/nodes",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"raiz\",\n\t\"parent\": \"null\",\n\t\"gain\": \"null\",\n\t\"probability\": \"null\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Hijos",
+			"request": {
+				"url": "localhost:3000/nodes",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Hijo tres del hijo dos\",\n\t\"parent\": 2,\n\t\"gain\": 10,\n\t\"probability\": 75\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Limpiar árbol",
+			"request": {
+				"url": "localhost:3000/clear",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Editar nodo",
+			"request": {
+				"url": "localhost:3000/nodes/0",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"LA RAIZ MADAFACAS\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Borrar nodo",
+			"request": {
+				"url": "localhost:3000/nodes/5",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
