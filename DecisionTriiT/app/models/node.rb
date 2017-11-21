@@ -65,7 +65,7 @@ class Node < ApplicationRecord
 			  "id"=>node,
 			  "name"=>my_node["name"].to_s,
 			  "parent"=>my_node["parent"].to_s,
-			  "probability"=>my_node["probability"].to_s,
+			  "probability"=>(my_node["probability"].to_f*100).to_s+'%',
 			  "gain"=>my_node["gain"].to_s,
 			  "expected_value"=>my_node["expected_value"].to_s,
 			  "route"=>my_node["route"],

@@ -151,6 +151,113 @@ class NodesController < ApplicationController
 
   end
 
+
+####################################################
+####################################################
+####################################################
+  #Me retorna la solución
+  def find_choice
+    #Chequeamos que efectivamente no falte nada
+    @result=Node.is_complete
+    overall=Node.generate_tree
+    puts "aaaaaaaaaaa"
+    if (@result)
+      leaves=Node.get_leaves  
+      #Clonamos el arbol para evitar malos cambios
+      questions=overall.clone
+
+      #Hacemos el while general
+      while true
+        #Tomamos el primer elemento de la lista de hojas
+        u=leaves.shift
+
+        #Comprobamos que no sea 0, si es así, habremos acabado
+        if (u==0)
+          break
+        end
+
+        #Tomamos los valores de interés
+        node=questions[u]
+        parent=node['parent']
+        probability=node['probability']
+        gain=node['gain']
+        e=node['expected_value']
+
+
+        #Si la probabilidad es de 1, es una opción arbitraria
+        #Por lo que harémos la función de seleccionar el de beneficio mayor
+        if(probability==1.0)
+          if(gain>questions[parent]['gain'])
+            questions[parent]['gain']=gain
+            questions[parent]["route"]=[parent]+node["route"]
+          end
+        else
+        #Si es de probabilidad aleatoria, sumamos los E (Prob*Gain) de los hijos
+          if(questions[parent]['gain']==-Float::INFINITY)
+            questions[parent]['gain']=0
+          end
+
+          questions[parent]['gain']+=e    
+          #Asignamos las rutas posibles
+          unless(node["route"].empty?)
+            questions[parent]["route"]=questions[parent]["route"]+[node["route"]]
+          end
+        end
+
+
+        #Calculamos el E del padre
+        questions[parent]['expected_value']=questions[parent]['probability']*questions[parent]['gain']
+        
+        #Comprobamos si el padre no tiene más hijos, para volverlo una hoja
+        questions[parent]["children"].delete(u)
+        if(questions[parent]["children"].empty?)
+          leaves.push(parent)
+        end
+      end
+
+
+      #Me verifica la ruta
+      @ideal_route=questions[0]['route']
+      @so=""
+      puts "The Ideal Route"
+      puts @ideal_route.to_s
+
+      if @ideal_route[1].kind_of?(Array)
+        @so=questions[@ideal_route[1][0]]["name"]
+      else
+        @so=questions[@ideal_route[1]]["name"]
+      end
+
+      @dilema=questions[0]["name"]
+      @ideal_route=@ideal_route.to_s
+      @ideal_gain=questions[0]["gain"].to_s
+
+
+      puts "\n####################################"
+      puts "La mejor opción para "+@dilema+" será: "+@so 
+      puts "\nLa ruta ideal es:"+@ideal_route
+      puts "La ganancia total es: "+@ideal_gain
+      puts "\n####################################"
+
+      @results = {
+        "Dilema"=>@dilema,
+        "Option"=>@so,
+        "Route"=>@ideal_route,
+        "Gain"=>@ideal_gain
+      }
+
+      render json: @results.to_json
+
+    else
+
+      render json: {:Error=>"The tree is not complete"}, status: :unprocessable_entity and return
+
+    end
+
+  end
+
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_node
