@@ -72,7 +72,7 @@ Me actualiza el nodo que necesito, los valores que acepta cambios son:
 
 
 ## GET /results
-Me obtiene los resultados del arbol SOLO si está completo
+Me 	obtiene los resultados del arbol SOLO si está completo
 Retornandome:
 ```json
 {

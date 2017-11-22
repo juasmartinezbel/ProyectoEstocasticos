@@ -165,10 +165,7 @@ class NodesController < ApplicationController
 
   # PATCH/PUT /nodes/1
   def update
-
-
     if(params[:parent]!=@node.parent && @node.ide!=0)
-      puts "TATATATATTAAADASDASDAS"
       @new_parent=Node.find_by(:ide=>params[:parent])
       @parent=Node.find_by(:ide=>@node.parent)
 
@@ -189,6 +186,7 @@ class NodesController < ApplicationController
       @new_parent.save
     end
 
+
     if(params[:parent]==@node.parent )
       unless(params[:probability].nil?)
         my_parent=Node.find_by(:ide=>@node.parent)
@@ -202,7 +200,6 @@ class NodesController < ApplicationController
             my_parent.save
           end
         end
-
         g=set_prob(my_parent, params[:probability].to_f)
         unless(g)
           render json: {:Error=>"This node can't handle that percentage anymore"}, status: :unprocessable_entity and return
@@ -333,7 +330,7 @@ class NodesController < ApplicationController
           @so=questions[@ideal_route[1]]["name"]
         end
       else
-        @so = "La opción es aleatoria, así que no depende del usuario"
+        @so = "The first option is random, it doesn't depend on the user"
       end
       @dilema=questions[0]["name"]
       @ideal_route=@ideal_route.to_s
