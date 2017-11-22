@@ -85,3 +85,11 @@ Retornandome:
 
 ## GET /clear
 Me borra todo el arbol.
+
+## GET /can
+
+```json
+{
+    "Nodes": [1, 2]
+}
+```
