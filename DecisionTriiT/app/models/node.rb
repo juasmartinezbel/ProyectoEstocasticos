@@ -56,6 +56,7 @@ class Node < ApplicationRecord
 			end
 			child=u.children.split(',').map { |s| s.to_i }
 			new_child=[]
+
 			for j in child do
 				if (j>ide_del)
 					new_child.append(j-1)
@@ -65,6 +66,13 @@ class Node < ApplicationRecord
 			end
 
 			new_child_text=Node.turn(new_child)
+			puts new_child
+			puts "New Child"
+			puts "New Child"
+			puts "New Child"
+			puts "New Child"
+			puts "New Child"
+			puts new_child_text
 			u.children=new_child_text
 			if(u.parent>ide_del)
 				u.parent-=1
@@ -78,7 +86,6 @@ class Node < ApplicationRecord
 		@Tree={}
 		size=Node.all.size
 
-		puts size
 		for id in (0...size)
 			u=Node.find_by(:ide=>id)
 			ev=-213			
@@ -96,14 +103,12 @@ class Node < ApplicationRecord
 			  "gain"=>u.gain,
 			  "expected_value"=>ev,
 			  "route"=>u.route.split(',').map { |s| s.to_i }
-			  
-
 			}
 			print id.to_s+"=> "
 			puts @Tree[id]
 		end
+
 		@Tree
-		
 	end
 
 	def self.json_tree(tree)
@@ -135,9 +140,9 @@ class Node < ApplicationRecord
 	end
 
 	def self.turn(ar)
-		txt=''
+		txt=""
 		for i in ar
-			txt=i.to_s+','
+			txt=txt+i.to_s+","
 		end
 		txt
 	end

@@ -8,7 +8,11 @@ class NodesController < ApplicationController
 
     if size>0
       tree=Node.generate_tree
+      puts "----------------------"
+      puts "Whole tree: "
+      
       puts tree
+      puts "----------------------"
       puts "\n\n\n\n"
       puts Node.is_complete
       @tree_node=Node.json_tree(tree).to_json
@@ -163,65 +167,6 @@ class NodesController < ApplicationController
   end
 
 
-  # PATCH/PUT /nodes/1
-  def update
-    if(params[:parent]!=@node.parent && @node.ide!=0)
-      @new_parent=Node.find_by(:ide=>params[:parent])
-      @parent=Node.find_by(:ide=>@node.parent)
-
-      g=set_prob(parent, @probability)
-      unless(g)
-        render json: {:Error=>"This node can't update to that porcentage"}, status: :unprocessable_entity and return
-      end
-
-      arr=@parent.children.split(',').map { |s| s.to_i }
-      arr.delete(@node.ide)
-      ar=Node.turn(arr)
-      @parent.children=ar
-      @parent.save
-      Node.update_probabilities(@node.ide)
-
-
-      @new_parent.children+=@node.ide.to_s
-      @new_parent.save
-    end
-
-
-    if(params[:parent]==@node.parent )
-      unless(params[:probability].nil?)
-        my_parent=Node.find_by(:ide=>@node.parent)
-        child=my_parent.children.split(',').map { |s| s.to_i }
-        if(child.size>1)
-          my_parent.full_prob=0.0
-          my_parent.save
-        else
-          if(params[:probability].to_f !=100.0)
-            my_parent.full_prob=my_parent.full_prob-@node.probability.to_f
-            my_parent.save
-          end
-        end
-        g=set_prob(my_parent, params[:probability].to_f)
-        unless(g)
-          render json: {:Error=>"This node can't handle that percentage anymore"}, status: :unprocessable_entity and return
-        end
-
-      end
-    end
-
-
-    if @node.update(node_params)
-      tree=Node.generate_tree
-      puts tree
-      puts "\n\n\n\n"
-      puts Node.is_complete
-      @tree_node=Node.json_tree(tree).to_json
-
-      render json: @tree_node
-    else
-      render json: @node.errors, status: :unprocessable_entity
-    end
-  end
-
   # DELETE /nodes/1
   def destroy
 
@@ -237,6 +182,7 @@ class NodesController < ApplicationController
     @parent.children=ar
     @parent.save
     Node.update_probabilities(@node.ide)
+    
     if (@node.ide+1!=Node.all.size)
       Node.update_ids(@node.ide)
     end
